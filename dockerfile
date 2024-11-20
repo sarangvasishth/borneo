@@ -10,6 +10,8 @@ RUN npm install
 
 RUN npm install -g nodemon
 
+RUN echo "NODE_ENV is set to $NODE_ENV"
+
 # Copy application source
 COPY . .
 
