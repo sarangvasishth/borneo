@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  # Node.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - AWS_REGION=${AWS_REGION}
+    depends_on:
+      - elasticsearch
+      - tika
+    volumes:
+      - .:/usr/src/app # Mount your code into the container
+    command: npm run dev # Adjust based on your app's start command
+
+  # Elasticsearch Service
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false # Disable security for local development
+      - bootstrap.memory_lock=true
+    ports:
+      - "${ELASTIC_SEARCH_PORT}:${ELASTIC_SEARCH_PORT}" # Expose Elasticsearch
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  # Apache Tika Service
+  tika:
+    image: apache/tika:1.28
+    container_name: tika
+    ports:
+      - "${APACHE_TIKA_PORT}:${APACHE_TIKA_PORT}" # Expose Apache Tika server
