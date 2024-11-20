@@ -15,4 +15,4 @@ COPY . .
 EXPOSE ${APP_PORT}
 
 # Start the application
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
