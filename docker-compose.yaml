@@ -16,6 +16,7 @@ services:
       - tika
     volumes:
       - .:/usr/src/app # Mount your code into the container
+      - /usr/src/app/node_modules
     command: npm run dev # Adjust based on your app's start command
 
   # Elasticsearch Service
