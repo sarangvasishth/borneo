@@ -1,5 +1,5 @@
 # Base image
-FROM node:18-alpine
+FROM node:14-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -7,11 +7,6 @@ WORKDIR /usr/src/app
 # Copy package.json and install dependencies
 COPY package*.json ./
 RUN npm install
-
-RUN npm install -g nodemon
-
-ARG NODE_ENV=development
-ENV NODE_ENV=${NODE_ENV}
 
 # Copy application source
 COPY . .
