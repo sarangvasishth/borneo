@@ -9,7 +9,13 @@ export default class ElasticSearchService {
   constructor() {
     this.elasticSearchUrl = ELASTIC_SEARCH_URL
     this.elasticSearchIndex = ELASTIC_SEARCH_INDEX
-    this.esClient = new ElasticSearchClient({ node: this.elasticSearchUrl })
+    this.esClient = new ElasticSearchClient({
+      node: this.elasticSearchUrl,
+      auth: {
+        username: process.env.ELASTIC_USERNAME ?? "",
+        password: process.env.ELASTIC_PASSWORD ?? ""
+      }
+    })
   }
 
   public async indexData(documentId: string, data: any): Promise<void> {
