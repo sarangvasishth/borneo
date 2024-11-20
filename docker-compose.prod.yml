@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile.prod # Use a production-specific Dockerfile
     ports:
       - "${APP_PORT}:${APP_PORT}" # Map the application port
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production # Set production environment
       - AWS_REGION=${AWS_REGION}
