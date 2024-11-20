@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  # Node.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod # Use a production-specific Dockerfile
+    ports:
+      - "${APP_PORT}:${APP_PORT}" # Map the application port
+    environment:
+      - NODE_ENV=production # Set production environment
+      - AWS_REGION=${AWS_REGION}
+    depends_on:
+      - elasticsearch
+      - tika
+    restart: always # Ensure the container restarts on failure
+    logging:
+      driver: "json-file" # Configure logging
+      options:
+        max-size: "10m"
+        max-file: "5"
+    volumes: [] # No volume mounts in production
+
+  # Elasticsearch Service
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true # Enable Elasticsearch security for production
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD} # Use a secure password
+    ports:
+      - "${ELASTIC_SEARCH_PORT}:${ELASTIC_SEARCH_PORT}" # Map Elasticsearch port
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data # Persistent storage for Elasticsearch
+
+  # Apache Tika Service
+  tika:
+    image: apache/tika:1.28
+    container_name: tika
+    ports:
+      - "${APACHE_TIKA_PORT}:${APACHE_TIKA_PORT}" # Map Tika server port
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  elasticsearch_data: # Persistent volume for Elasticsearch data
