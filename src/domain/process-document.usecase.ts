@@ -1,4 +1,3 @@
-import { S3_URL } from "../config/environment"
 import { CloudStorageService, DocumentSearchService, ProcessDocumentInput, TextExtractionService, Usecase } from "./interface"
 
 export class ProcessDocumentInteractor implements Usecase<ProcessDocumentInput> {
@@ -17,7 +16,7 @@ export class ProcessDocumentInteractor implements Usecase<ProcessDocumentInput> 
 
     const dataToIndex = {
       title: fileName,
-      url: `${S3_URL}/${fileName}`,
+      url: this.documentSearchService.generateDocumentUrl(fileName),
       content: data
     }
 

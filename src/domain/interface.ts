@@ -28,6 +28,7 @@ export interface DocumentSearchService {
   indexData(documentId: string, data: any): Promise<void>
   searchFiles(queryString: string): Promise<DocumentSearchResult[]>
   generateDocumentId(fileName: string): string
+  generateDocumentUrl(fileName: string): string
 }
 
 export interface CloudStorageService {

@@ -39,4 +39,8 @@ export class ElasticSearchService implements DocumentSearchService {
     const uniqueString = `${fileName}-${Date.now().toString()}`
     return crypto.createHash("md5").update(uniqueString).digest("hex")
   }
+
+  public generateDocumentUrl(fileName: string): string {
+    return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`
+  }
 }
