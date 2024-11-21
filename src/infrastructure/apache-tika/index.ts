@@ -1,13 +1,9 @@
 import axios from "axios"
 import { Readable } from "stream"
-import { APACHE_TIKA_URL } from "../../config/environment"
+import { TextExtractionService } from "../../domain/interface"
 
-export default class ApacheTikaService {
-  private tikaServerUrl: string
-
-  constructor() {
-    this.tikaServerUrl = APACHE_TIKA_URL
-  }
+export class ApacheTikaService implements TextExtractionService {
+  constructor(private tikaServerUrl: string) {}
 
   public async extractText(fileStream: Readable): Promise<string> {
     try {

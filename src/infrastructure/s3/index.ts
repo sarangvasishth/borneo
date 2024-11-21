@@ -1,21 +1,9 @@
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { Readable } from "stream"
-import { AWS_REGION, AWS_S3_ACCESS_KEY_ID, AWS_S3_SECRET_ACCESS_KEY } from "../../config/environment"
+import { CloudStorageService } from "../../domain/interface"
 
-export default class S3Service {
-  private region: string
-  private s3Client: S3Client
-
-  constructor() {
-    this.region = AWS_REGION
-    this.s3Client = new S3Client({
-      region: this.region,
-      credentials: {
-        accessKeyId: AWS_S3_ACCESS_KEY_ID ?? "",
-        secretAccessKey: AWS_S3_SECRET_ACCESS_KEY ?? ""
-      }
-    })
-  }
+export class S3Service implements CloudStorageService {
+  constructor(private s3Client: S3Client) {}
 
   public async getFileStream(bucketName: string, key: string): Promise<Readable> {
     const command = new GetObjectCommand({
@@ -30,5 +18,14 @@ export default class S3Service {
     }
 
     return response.Body as Readable
+  }
+
+  public static parseMessageBody(body: string): { bucketName: string; fileName: string } {
+    const message = JSON.parse(body)
+    const messageJSON = JSON.parse(message.Message)
+    return {
+      bucketName: messageJSON.Records[0].s3.bucket.name,
+      fileName: messageJSON.Records[0].s3.object.key
+    }
   }
 }

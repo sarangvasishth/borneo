@@ -1,22 +1,9 @@
 import { Client as ElasticSearchClient } from "@elastic/elasticsearch"
-import { ELASTIC_SEARCH_INDEX, ELASTIC_SEARCH_URL } from "../../config/environment"
+import crypto from "crypto"
+import { DocumentSearchResult, DocumentSearchService } from "../../domain/interface"
 
-export default class ElasticSearchService {
-  private esClient: ElasticSearchClient
-  private elasticSearchUrl: string
-  private elasticSearchIndex: string
-
-  constructor() {
-    this.elasticSearchUrl = ELASTIC_SEARCH_URL
-    this.elasticSearchIndex = ELASTIC_SEARCH_INDEX
-    this.esClient = new ElasticSearchClient({
-      node: this.elasticSearchUrl,
-      auth: {
-        username: process.env.ELASTIC_USERNAME ?? "",
-        password: process.env.ELASTIC_PASSWORD ?? ""
-      }
-    })
-  }
+export class ElasticSearchService implements DocumentSearchService {
+  constructor(private esClient: ElasticSearchClient, private elasticSearchIndex: string) {}
 
   public async indexData(documentId: string, data: any): Promise<void> {
     try {
@@ -27,24 +14,29 @@ export default class ElasticSearchService {
     }
   }
 
-  public async searchFiles(query: string) {
+  public async searchFiles(queryString: string): Promise<DocumentSearchResult[]> {
     const results = await this.esClient.search({
       index: this.elasticSearchIndex,
       body: {
         query: {
-          match: { content: query }
+          match: { content: queryString }
         }
       }
     })
 
-    const reponse = results.hits.hits.map(h => {
+    const reponse: DocumentSearchResult[] = results.hits.hits.map(h => {
       const document = h._source as any
       return {
-        title: document.title,
-        url: document.url
+        title: document.title as string,
+        url: document.url as string
       }
     })
 
     return reponse
+  }
+
+  public generateDocumentId(fileName: string): string {
+    const uniqueString = `${fileName}-${Date.now().toString()}`
+    return crypto.createHash("md5").update(uniqueString).digest("hex")
   }
 }
