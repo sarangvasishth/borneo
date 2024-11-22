@@ -1,4 +1,5 @@
 import { S3Client } from "@aws-sdk/client-s3"
+import { Client as ElasticSearchClient } from "@elastic/elasticsearch"
 import axios from "axios"
 import { Request, Response } from "express"
 import { DocumentProcessingController } from "../../../adapter/controller"
@@ -13,9 +14,8 @@ import {
   ELASTIC_USERNAME
 } from "../../../config/environment"
 import { ApacheTikaService } from "../../apache-tika"
-import { ElasticSearchService } from "../../elastic-search"
 import { S3Service } from "../../aws/s3-service"
-import { Client as ElasticSearchClient } from "@elastic/elasticsearch"
+import { ElasticSearchService } from "../../elastic-search"
 
 export const handleSnsUploadNotification = async (req: Request, res: Response) => {
   const messageType = req.header("x-amz-sns-message-type")

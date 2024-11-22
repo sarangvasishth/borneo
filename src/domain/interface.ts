@@ -1,5 +1,3 @@
-import { Readable } from "stream"
-
 export interface Usecase<Request> {
   execute(request: Request): Promise<void>
 }
@@ -21,7 +19,7 @@ export abstract class RoutePresenter<Response> {
 }
 
 export interface TextExtractionService {
-  extractText(fileStream: Readable): Promise<string>
+  extractText(fileBuffer: Buffer): Promise<string>
 }
 
 export interface DocumentSearchService {
@@ -32,7 +30,7 @@ export interface DocumentSearchService {
 }
 
 export interface CloudStorageService {
-  getFileStream(bucketName: string, key: string): Promise<Readable>
+  getFileBuffer(bucketName: string, key: string): Promise<Buffer>
 }
 
 export interface DocumentSearchResult {

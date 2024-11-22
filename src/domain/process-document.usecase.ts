@@ -10,9 +10,9 @@ export class ProcessDocumentInteractor implements Usecase<ProcessDocumentInput> 
   public async execute(input: ProcessDocumentInput) {
     const { fileName, bucketName } = input
 
-    const fileStream = await this.cloudStorageService.getFileStream(bucketName, fileName)
+    const fileBuffer = await this.cloudStorageService.getFileBuffer(bucketName, fileName)
 
-    const data = await this.textExtractionService.extractText(fileStream)
+    const data = await this.textExtractionService.extractText(fileBuffer)
 
     const dataToIndex = {
       title: fileName,

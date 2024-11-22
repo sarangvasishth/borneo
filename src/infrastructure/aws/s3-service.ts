@@ -5,7 +5,7 @@ import { CloudStorageService } from "../../domain/interface"
 export class S3Service implements CloudStorageService {
   constructor(private s3Client: S3Client) {}
 
-  public async getFileStream(bucketName: string, key: string): Promise<Readable> {
+  public async getFileBuffer(bucketName: string, key: string): Promise<Buffer> {
     const command = new GetObjectCommand({
       Bucket: bucketName,
       Key: key
@@ -17,7 +17,12 @@ export class S3Service implements CloudStorageService {
       throw new Error("No content returned from S3")
     }
 
-    return response.Body as Readable
+    const chunks: Buffer[] = []
+    for await (const chunk of response.Body as Readable) {
+      chunks.push(Buffer.from(chunk))
+    }
+
+    return Buffer.concat(chunks) // Combine chunks into a single buffer
   }
 
   public static parseMessageBody(body: string): { bucketName: string; fileName: string } {
