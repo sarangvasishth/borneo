@@ -14,7 +14,7 @@ import {
 } from "../../../config/environment"
 import { ApacheTikaService } from "../../apache-tika"
 import { ElasticSearchService } from "../../elastic-search"
-import { S3Service } from "../../s3"
+import { S3Service } from "../../aws/s3-service"
 import { Client as ElasticSearchClient } from "@elastic/elasticsearch"
 
 export const handleSnsUploadNotification = async (req: Request, res: Response) => {
