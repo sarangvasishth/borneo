@@ -1,6 +1,6 @@
 import { Client as ElasticSearchClient } from "@elastic/elasticsearch"
 import { Request, Response } from "express"
-import { DocumentSearchController } from "../../../adapter/controller"
+import { SearchController } from "../../../adapter/controller"
 import { RouteSearchDocumentsPresenter } from "../../../adapter/presenter"
 import { ELASTIC_PASSWORD, ELASTIC_SEARCH_INDEX, ELASTIC_SEARCH_URL, ELASTIC_USERNAME } from "../../../config/environment"
 import { ElasticSearchService } from "../../elastic-search"
@@ -13,7 +13,7 @@ export const handleSearchDocuments = async (req: Request, res: Response) => {
 
   const presenter = new RouteSearchDocumentsPresenter()
 
-  const controller = new DocumentSearchController(elasticSearch)
+  const controller = new SearchController(elasticSearch)
   await controller.searchDocuments(query, presenter)
 
   const response = await elasticSearch.searchFiles(query)

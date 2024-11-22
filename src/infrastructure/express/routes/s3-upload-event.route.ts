@@ -2,7 +2,7 @@ import { S3Client } from "@aws-sdk/client-s3"
 import { Client as ElasticSearchClient } from "@elastic/elasticsearch"
 import axios from "axios"
 import { Request, Response } from "express"
-import { DocumentProcessingController } from "../../../adapter/controller"
+import { ProcessingController } from "../../../adapter/controller"
 import {
   APACHE_TIKA_URL,
   AWS_REGION,
@@ -45,7 +45,7 @@ export const handleSnsUploadNotification = async (req: Request, res: Response) =
 
     const input = S3Service.parseMessageBody(req.body)
 
-    const controller = new DocumentProcessingController(s3Service, extractService, elasticSearch)
+    const controller = new ProcessingController(s3Service, extractService, elasticSearch)
     await controller.processDocument(input)
 
     res.status(200).send("Notification received.")

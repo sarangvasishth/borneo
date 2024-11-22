@@ -19,7 +19,7 @@ export class CloudStorageController {
   }
 }
 
-export class DocumentProcessingController {
+export class ProcessingController {
   constructor(
     private cloudStorageService: CloudStorageService,
     private textExtractionService: TextExtractionService,
@@ -32,7 +32,7 @@ export class DocumentProcessingController {
   }
 }
 
-export class DocumentSearchController {
+export class SearchController {
   constructor(private documentSearchService: DocumentSearchService) {}
 
   public async searchDocuments(query: string, presenter: SearchDocumentsPresenter) {
