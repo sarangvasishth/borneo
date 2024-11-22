@@ -30,12 +30,20 @@ export interface DocumentSearchService {
 }
 
 export interface CloudStorageService {
+  uploadFile(input: UploadDocumentInput): Promise<void>
   getFileBuffer(bucketName: string, key: string): Promise<Buffer>
 }
 
 export interface DocumentSearchResult {
   title: string
   url: string
+}
+
+export interface UploadDocumentInput {
+  key: string
+  bucketName: string
+  fileBuffer: Buffer
+  contentType: string
 }
 
 export interface ProcessDocumentInput {

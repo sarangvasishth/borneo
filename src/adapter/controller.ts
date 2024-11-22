@@ -1,6 +1,23 @@
-import { CloudStorageService, DocumentSearchService, ProcessDocumentInput, SearchDocumentsPresenter, TextExtractionService } from "../domain/interface"
+import {
+  CloudStorageService,
+  DocumentSearchService,
+  ProcessDocumentInput,
+  SearchDocumentsPresenter,
+  TextExtractionService,
+  UploadDocumentInput
+} from "../domain/interface"
 import { ProcessDocumentInteractor } from "../domain/process-document.usecase"
 import { SearchDocumentsInteractor } from "../domain/search-documents.usecase"
+import { UploadDocumentsInteractor } from "../domain/upload-document.usecase"
+
+export class CloudStorageController {
+  constructor(private cloudStorageService: CloudStorageService) {}
+
+  public async uploadDocument(input: UploadDocumentInput) {
+    const usecase = new UploadDocumentsInteractor(this.cloudStorageService)
+    await usecase.execute(input)
+  }
+}
 
 export class DocumentProcessingController {
   constructor(

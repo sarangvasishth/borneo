@@ -1,6 +1,6 @@
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { Readable } from "stream"
-import { CloudStorageService } from "../../domain/interface"
+import { CloudStorageService, UploadDocumentInput } from "../../domain/interface"
 
 export class S3Service implements CloudStorageService {
   constructor(private s3Client: S3Client) {}
@@ -23,6 +23,19 @@ export class S3Service implements CloudStorageService {
     }
 
     return Buffer.concat(chunks) // Combine chunks into a single buffer
+  }
+
+  public async uploadFile(input: UploadDocumentInput): Promise<void> {
+    const { bucketName, key, fileBuffer, contentType } = input
+
+    const command = new PutObjectCommand({
+      Bucket: bucketName,
+      Key: key,
+      Body: fileBuffer,
+      ContentType: contentType
+    })
+
+    await this.s3Client.send(command)
   }
 
   public static parseMessageBody(body: string): { bucketName: string; fileName: string } {
