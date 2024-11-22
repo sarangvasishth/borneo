@@ -6,12 +6,7 @@ export class ElasticSearchService implements DocumentSearchService {
   constructor(private esClient: ElasticSearchClient, private elasticSearchIndex: string) {}
 
   public async indexData(documentId: string, data: any): Promise<void> {
-    try {
-      await this.esClient.index({ index: this.elasticSearchIndex, id: documentId, body: data })
-    } catch (error) {
-      console.error("Error indexing data to Elasticsearch")
-      throw error
-    }
+    await this.esClient.index({ index: this.elasticSearchIndex, id: documentId, body: data })
   }
 
   public async searchFiles(queryString: string): Promise<DocumentSearchResult[]> {
