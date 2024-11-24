@@ -15,3 +15,4 @@ export const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || ""
 export const AWS_REGION = process.env.AWS_REGION || ""
 export const AWS_S3_ACCESS_KEY_ID = process.env.AWS_S3_ACCESS_KEY_ID
 export const AWS_S3_SECRET_ACCESS_KEY = process.env.AWS_S3_SECRET_ACCESS_KEY
+export const AWS_S3_MAX_FILE_SIZE = Number(process.env.AWS_S3_MAX_FILE_SIZE) || 10 * 1024 * 1024
